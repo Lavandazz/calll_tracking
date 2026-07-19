@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1120</width>
+    <height>762</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>-80</x>
+      <y>0</y>
+      <width>1284</width>
+      <height>764</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap>app/images/11.png</pixmap>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignmentFlag::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton">
+    <property name="geometry">
+     <rect>
+      <x>460</x>
+      <y>580</y>
+      <width>180</width>
+      <height>55</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+color: white;
+background-color:rgba(133, 132, 134, 199);
+border-radius: 9px;
+border: 1px solid rgba(254, 253, 255, 112);
+font-family: &quot;Gill Sans&quot;, sans-serif;
+font-size: 20px;
+}
+
+QPushButton:hover {
+color: black;
+background-color:rgba(255, 255, 255, 181);
+}
+
+QPushButton:pressed {
+background-color:rgba(255, 255, 255, 70);
+}</string>
+    </property>
+    <property name="text">
+     <string>Войти</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_2">
+    <property name="geometry">
+     <rect>
+      <x>460</x>
+      <y>640</y>
+      <width>180</width>
+      <height>55</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+color: white;
+background-color:rgba(133, 132, 134, 199);
+border-radius: 9px;
+border: 1px solid rgba(254, 253, 255, 112);
+font-family: &quot;Gill Sans&quot;, sans-serif;
+font-size: 20px;
+}
+
+QPushButton:hover {
+color: black;
+background-color:rgba(255, 255, 255, 181);
+}
+
+QPushButton:pressed {
+background-color:rgba(255, 255, 255, 70);
+}</string>
+    </property>
+    <property name="text">
+     <string>Регистрация</string>
+    </property>
+   </widget>
+   <widget class="QWidget" name="widget" native="true">
+    <property name="geometry">
+     <rect>
+      <x>360</x>
+      <y>420</y>
+      <width>381</width>
+      <height>101</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QSplitter" name="splitter">
+       <property name="orientation">
+        <enum>Qt::Orientation::Horizontal</enum>
+       </property>
+       <widget class="QLabel" name="login">
+        <property name="layoutDirection">
+         <enum>Qt::LayoutDirection::LeftToRight</enum>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color: black;
+border: 1px solid white;
+background-color: rgba(255, 255, 255, 222);
+padding: 5px;</string>
+        </property>
+        <property name="text">
+         <string>Логин:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="enterLogin">
+        <property name="styleSheet">
+         <string notr="true">background-color: rgba(51, 51, 51, 242);</string>
+        </property>
+       </widget>
+      </widget>
+     </item>
+     <item>
+      <widget class="QSplitter" name="splitter_2">
+       <property name="orientation">
+        <enum>Qt::Orientation::Horizontal</enum>
+       </property>
+       <widget class="QLabel" name="login_2">
+        <property name="styleSheet">
+         <string notr="true">color: black;
+border: 1px solid white;
+background-color: rgba(255, 255, 255, 222);
+padding: 5px;</string>
+        </property>
+        <property name="text">
+         <string>Пароль:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="enterLogin_2">
+        <property name="styleSheet">
+         <string notr="true">background-color: rgba(51, 51, 51, 242);</string>
+        </property>
+       </widget>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>300</x>
+      <y>380</y>
+      <width>501</width>
+      <height>181</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(254, 253, 255, 100);
+border-radius: 9px;</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <zorder>label</zorder>
+   <zorder>label_2</zorder>
+   <zorder>pushButton</zorder>
+   <zorder>pushButton_2</zorder>
+   <zorder>widget</zorder>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

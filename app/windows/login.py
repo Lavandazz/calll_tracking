@@ -1,48 +1,24 @@
-from PySide6.QtWidgets import QPushButton, QVBoxLayout, QWidget
+from PySide6.QtWidgets import QMainWindow, QMessageBox
+from app.windows.main_app import MainWindow
+from app.windows.panel import PanelWindow
+from login import Ui_MainWindow
 
-from PySide6.QtWidgets import QLabel, QLineEdit, QMessageBox
-from app.windows.main import MainWindow
-
-
-
-class LoginWindow(QWidget):
+class LoginWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Вход в систему")
-        self.setFixedSize(300, 200)  # фиксированный размер
+        # Создается экземпляр класса Ui_MainWindow 
+        # и вызывается метод setupUi для настройки интерфейса
+        self.ui = Ui_MainWindow()
+        self.ui.setupUi(self)
+    
+        # Подключаем сигналы кнопок
+        self.ui.pushButton.clicked.connect(self.login)
+        self.ui.pushButton_2.clicked.connect(self.show_register_message)
 
-        # Создаём виджеты
-        self.label_login = QLabel("Логин:")
-        self.input_login = QLineEdit()
-        self.input_login.setPlaceholderText("Введите логин")
 
-        self.label_password = QLabel("Пароль:")
-        self.input_password = QLineEdit()
-        self.input_password.setPlaceholderText("Введите пароль")
-        self.input_password.setEchoMode(QLineEdit.EchoMode.Password)  # скрываем символы
-
-        self.input_password.returnPressed.connect(self.handle_login)  # сигнал нажатия Enter в поле пароля 
-        self.btn_login = QPushButton("Войти")
-        self.btn_login.clicked.connect(self.handle_login)  # сигнал нажатия
-
-        self.btn_register = QPushButton("Регистрация")
-        self.btn_register.clicked.connect(self.show_register_message)
-
-        # Располагаем всё вертикально
-        layout = QVBoxLayout()
-        layout.addWidget(self.label_login)
-        layout.addWidget(self.input_login)
-        layout.addWidget(self.label_password)
-        layout.addWidget(self.input_password)
-        layout.addWidget(self.btn_login)
-        layout.addWidget(self.btn_register)
-
-        self.setLayout(layout)
-
-    # Слот для кнопки "Войти"
-    def handle_login(self):
-        login = self.input_login.text()
-        password = self.input_password.text()
+    def login(self):
+        login = self.ui.enterLogin.text()      # получаем текст из поля логина
+        password = self.ui.enterLogin_2.text() # получаем текст из поля пароля
 
         # ⚠️ Здесь потом будет запрос к БД через SQLAlchemy
         # Пока заглушка: пропускаем только admin / 12345
@@ -50,7 +26,7 @@ class LoginWindow(QWidget):
             # Закрываем окно входа
             self.close()
             # Создаём и показываем главное окно
-            self.main_window = MainWindow()
+            self.main_window = PanelWindow()
             self.main_window.show()
         else:
             QMessageBox.warning(self, "Ошибка", "Неверный логин или пароль")
