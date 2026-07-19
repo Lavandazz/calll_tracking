@@ -189,6 +189,78 @@ background-color: rgba(120, 155, 155, 179)
          </property>
         </widget>
        </item>
+       <item row="3" column="1">
+        <widget class="QPushButton" name="callLog">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>100</width>
+           <height>60</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>260</width>
+           <height>160</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QPushButton {
+color: rgb(219, 255, 252);
+background-color: rgba(61, 60, 61, 227);
+border: 1px solid rgba(183, 245, 255, 100);
+border-radius: 7px;
+}
+QPushButton:hover {
+background-color: rgba(120, 155, 155, 179)
+}</string>
+         </property>
+         <property name="text">
+          <string>Журнал звонков</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <widget class="QPushButton" name="callStatistic">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>100</width>
+           <height>60</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>260</width>
+           <height>160</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QPushButton {
+color: rgb(219, 255, 252);
+background-color: rgba(61, 60, 61, 227);
+border: 1px solid rgba(183, 245, 255, 100);
+border-radius: 7px;
+}
+QPushButton:hover {
+background-color: rgba(120, 155, 155, 179)
+}</string>
+         </property>
+         <property name="text">
+          <string>Статистика звонков</string>
+         </property>
+        </widget>
+       </item>
        <item row="1" column="1">
         <widget class="QPushButton" name="candidates">
          <property name="sizePolicy">
@@ -258,78 +330,6 @@ background-color: rgba(120, 155, 155, 179)
          </property>
          <property name="text">
           <string>Вакансии</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="1">
-        <widget class="QPushButton" name="callLog">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>100</width>
-           <height>60</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>260</width>
-           <height>160</height>
-          </size>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">QPushButton {
-color: rgb(219, 255, 252);
-background-color: rgba(61, 60, 61, 227);
-border: 1px solid rgba(183, 245, 255, 100);
-border-radius: 7px;
-}
-QPushButton:hover {
-background-color: rgba(120, 155, 155, 179)
-}</string>
-         </property>
-         <property name="text">
-          <string>Журнал звонков</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="1">
-        <widget class="QPushButton" name="callStatisric">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>100</width>
-           <height>60</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>260</width>
-           <height>160</height>
-          </size>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">QPushButton {
-color: rgb(219, 255, 252);
-background-color: rgba(61, 60, 61, 227);
-border: 1px solid rgba(183, 245, 255, 100);
-border-radius: 7px;
-}
-QPushButton:hover {
-background-color: rgba(120, 155, 155, 179)
-}</string>
-         </property>
-         <property name="text">
-          <string>Статистика звонков</string>
          </property>
         </widget>
        </item>
