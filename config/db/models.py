@@ -27,7 +27,6 @@ class User(Base):
             return f"Пользователь {self.id}, username {self.username}"
 
 
-
 class Role(Base):
     """
     Модель роли (Админ, Пользователь)
@@ -99,7 +98,7 @@ class Candidate(Base):
     email: Mapped[str] = mapped_column(Text, nullable=True)
     link_resume: Mapped[str] = mapped_column(Text, nullable=True)
     status: Mapped[str] = mapped_column(Text, nullable=True)
-    source: Mapped[Optional[str]] = mapped_column(Text, nullable=True)  # <-- добавлено
+    
     comment: Mapped[str] = mapped_column(Text, nullable=True)
     date_create: Mapped[date] = mapped_column(Date, default=date.today)
 
