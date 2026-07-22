@@ -173,7 +173,7 @@ class PanelWindow(QMainWindow):
             "Статус", "Источник", "Комментарий", "Резюме"
         ])
         # Запрещаем редактирование (опционально, если нужно)
-        table.setEditTriggers(QTableWidget.NoEditTriggers)
+        table.setEditTriggers(QTableWidget.NoEditTriggers) # type: ignore
         
         header = table.horizontalHeader()
         # Столбец ID – узкий
