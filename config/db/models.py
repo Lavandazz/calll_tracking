@@ -87,6 +87,8 @@ class Company(Base):
     email: Mapped[str] = mapped_column(Text, nullable=True)
     website: Mapped[str] = mapped_column(Text, nullable=True)
     date_create: Mapped[date] = mapped_column(Date, default=date.today)
+    
+    vacancies = relationship("Vacancy", back_populates="company")
 
 
 class Candidate(Base):

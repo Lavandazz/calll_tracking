@@ -3,10 +3,11 @@ from app.windows.panel import PanelWindow
 from login import Ui_MainWindow
 
 class LoginWindow(QMainWindow):
-    def __init__(self):
+    def __init__(self, session_maker):
         super().__init__()
         # Создается экземпляр класса Ui_MainWindow 
         # и вызывается метод setupUi для настройки интерфейса
+        self.session_maker = session_maker
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
     
@@ -28,7 +29,7 @@ class LoginWindow(QMainWindow):
             # Закрываем окно входа
             self.close()
             # Создаём и показываем главное окно
-            self.main_window = PanelWindow()
+            self.main_window = PanelWindow(session_maker=self.session_maker)
             self.main_window.show()
         else:
             QMessageBox.warning(self, "Ошибка", "Неверный логин или пароль")

@@ -1,15 +1,30 @@
 
 from PySide6.QtWidgets import QHeaderView, QMainWindow, QTableWidget, QTableWidgetItem
+from app.core.company_service import CompanyService
+from app.core.vacancy_service import VacancyService
+from app.windows.create_windiws.company_dialog import CompanyEditDialog
 from panel3 import Ui_MainWindow
-
+from PySide6.QtWidgets import (QDialog, QMessageBox)
 
 class PanelWindow(QMainWindow):
-    def __init__(self):
+    def __init__(self, session_maker):
         super().__init__()
         # Создается экземпляр класса Ui_MainWindow 
         # и вызывается метод setupUi для настройки интерфейса
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+
+        self.company_service = CompanyService(
+            table_widget=self.ui.tableCompany,
+            parent_widget=self,
+            session_maker=session_maker
+        )
+                # Сервис для вакансий
+        self.vacancy_service = VacancyService(
+            table_widget=self.ui.tableVacancy,
+            parent_widget=self,
+            session_maker=session_maker
+        )
 
         self.stacked = self.ui.stackedWidget
         self.stacked.setCurrentWidget(self.ui.welcomePage)
@@ -22,10 +37,19 @@ class PanelWindow(QMainWindow):
 
 
         self.setup_call_log_table()
-        self.setup_company_table()
-        self.setup_vacancy_table()
         self.setup_statistics_table()
         self.setup_candidates_table()
+
+        # Подключаем кнопки добавления, редактирования и удаления компаний к методам CompanyService
+        self.ui.addCompany.clicked.connect(self.company_service.add_company)
+        self.ui.editCompany.clicked.connect(self.company_service.edit_company)
+        self.ui.deleteCompany.clicked.connect(self.company_service.delete_company)
+
+        self.ui.addVacancy.clicked.connect(self.vacancy_service.add_vacancy)
+        self.ui.editVacancy.clicked.connect(self.vacancy_service.edit_vacancy)
+        self.ui.deleteVacancy.clicked.connect(self.vacancy_service.delete_vacancy)
+
+
 
     def show_company(self):
         self.ui.company.clicked.connect(lambda: self.stacked.setCurrentWidget(self.ui.companyPage))
@@ -60,70 +84,6 @@ class PanelWindow(QMainWindow):
             (3, "2026-07-17 16:20", "Сидоров Алексей", "Приглашён на собеседование", "12", "Назначена встреча на пятницу", ""),
             (4, "2026-07-17 09:45", "Козлова Анна", "Отказ", "3", "Не подходит график", ""),
             (5, "2026-07-16 14:00", "Николаев Дмитрий", "Нанят", "8", "Принят на позицию", "")
-        ]
-        table.setRowCount(len(test_data))
-        for row, data in enumerate(test_data):
-            for col, value in enumerate(data):
-                item = QTableWidgetItem(str(value))
-                table.setItem(row, col, item)
-
-
-    def setup_company_table(self):
-        table = self.ui.tableCompany   # имя, которое вы дали таблице в дизайнере
-        # Количество столбцов: ID, Название, Контактное лицо, Телефон, Email, Адрес, Сайт
-        table.setColumnCount(7)
-        table.setHorizontalHeaderLabels([
-            "ID", "Название", "Контактное лицо", "Телефон", "Email", "Адрес", "Сайт"
-        ])
-        table.setEditTriggers(QTableWidget.NoEditTriggers) # type: ignore
-        # Растягиваем столбцы
-        table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
-        # Устанавливаем режим растяжения для всех столбцов
-        header = table.horizontalHeader()
-        header.setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
-
-        # Затем для столбца 0 (ID) устанавливаем фиксированный режим и задаём ширину
-        header.setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
-        table.setColumnWidth(0, 20)  # ширина в пикселях 
-        # Заполняем тестовыми данными
-        self.populate_company()
-
-    def populate_company(self):
-        table = self.ui.tableCompany
-        test_data = [
-            (1, "ООО Ромашка", "Петров П.П.", "+7-999-111-22-33", "info@romashka.ru", "Москва, ул. Ленина, д.1", "https://romashka.ru"),
-            (2, "ЗАО ТехноСервис", "Сидоров С.С.", "+7-999-444-55-66", "contact@technoservice.ru", "СПб, Невский пр., д.10", "https://technoservice.ru"),
-            (3, "ИП Иванов", "Иванов И.И.", "+7-999-777-88-99", "ivanov@mail.ru", "Казань, ул. Пушкина, д.5", "https://ivanov.biz"),
-            (4, "ООО СтройГрупп", "Алексеев А.А.", "+7-999-222-33-44", "info@stroygroup.ru", "Екатеринбург, ул. Мира, д.20", "https://stroygroup.ru"),
-        ]
-        table.setRowCount(len(test_data))
-        for row, data in enumerate(test_data):
-            for col, value in enumerate(data):
-                item = QTableWidgetItem(str(value))
-                table.setItem(row, col, item)
-
-    def setup_vacancy_table(self):
-        table = self.ui.tableVacancy   # objectName таблицы из дизайнера
-        # Количество столбцов: ID, Название, Требования, Контактное лицо, Телефон, Компания, Ссылка
-        table.setColumnCount(7)
-        table.setHorizontalHeaderLabels([
-            "ID", "Название", "Требования", "Контактное лицо", "Телефон", "Компания", "Ссылка"
-        ])
-                # Запрещаем редактирование
-        table.setEditTriggers(QTableWidget.NoEditTriggers) # type: ignore
-        # Растягиваем столбцы
-        table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
-        # Заполняем тестовыми данными
-        self.populate_vacancy()
-
-    def populate_vacancy(self):
-        table = self.ui.tableVacancy
-        test_data = [
-            (1, "Python-разработчик", "Опыт 3+ лет, Django, PostgreSQL, Git", "Петрова Е.В.", "+7-999-123-45-67", "ООО Ромашка", "https://romashka.ru/vacancy/1"),
-            (2, "Менеджер по продажам", "Активные продажи B2B, опыт от 2 лет", "Сидоров А.П.", "+7-999-234-56-78", "ЗАО ТехноСервис", "https://technoservice.ru/careers/2"),
-            (3, "Аналитик данных", "SQL, Python, Power BI, высшее образование", "Иванова М.И.", "+7-999-345-67-89", "ИП Иванов", "https://ivanov.biz/jobs/3"),
-            (4, "Frontend-разработчик", "React, TypeScript, опыт 2+ года", "Алексеев Д.Д.", "+7-999-456-78-90", "ООО СтройГрупп", "https://stroygroup.ru/vacancy/4"),
-            (5, "HR-менеджер", "Подбор персонала, проведение собеседований", "Козлова А.С.", "+7-999-567-89-01", "ООО Ромашка", "https://romashka.ru/vacancy/5"),
         ]
         table.setRowCount(len(test_data))
         for row, data in enumerate(test_data):
