@@ -1,5 +1,7 @@
 
 from PySide6.QtWidgets import QHeaderView, QMainWindow, QTableWidget, QTableWidgetItem
+from app.core.calll_service import CallService
+from app.core.candidate_service import CandidateService
 from app.core.company_service import CompanyService
 from app.core.vacancy_service import VacancyService
 from app.windows.create_windiws.company_dialog import CompanyEditDialog
@@ -26,6 +28,19 @@ class PanelWindow(QMainWindow):
             session_maker=session_maker
         )
 
+                # Сервис для кандидатов
+        self.candidate_service = CandidateService(
+            table_widget=self.ui.tableCandidates,
+            parent_widget=self,
+            session_maker=session_maker
+        )
+
+        self.call_service = CallService(
+            table_widget=self.ui.tableLog,
+            parent_widget=self,
+            session_maker=session_maker
+        )
+
         self.stacked = self.ui.stackedWidget
         self.stacked.setCurrentWidget(self.ui.welcomePage)
         
@@ -36,9 +51,8 @@ class PanelWindow(QMainWindow):
         self.ui.callStatistic.clicked.connect(lambda: self.stacked.setCurrentWidget(self.ui.statisticPage))
 
 
-        self.setup_call_log_table()
         self.setup_statistics_table()
-        self.setup_candidates_table()
+        # self.setup_candidates_table()
 
         # Подключаем кнопки добавления, редактирования и удаления компаний к методам CompanyService
         self.ui.addCompany.clicked.connect(self.company_service.add_company)
@@ -49,47 +63,18 @@ class PanelWindow(QMainWindow):
         self.ui.editVacancy.clicked.connect(self.vacancy_service.edit_vacancy)
         self.ui.deleteVacancy.clicked.connect(self.vacancy_service.delete_vacancy)
 
+        self.ui.addCall.clicked.connect(self.call_service.add_call)       # предположим, есть кнопка
+        self.ui.editCall.clicked.connect(self.call_service.edit_call)     # предположим, есть
+        self.ui.deleteCall.clicked.connect(self.call_service.delete_call) # предположим, есть
+
+        self.ui.addCandidate.clicked.connect(self.candidate_service.add_candidate)
+        self.ui.editCandidate.clicked.connect(self.candidate_service.edit_candidate)
+        self.ui.deleteCandidate.clicked.connect(self.candidate_service.delete_candidate)
+
 
 
     def show_company(self):
         self.ui.company.clicked.connect(lambda: self.stacked.setCurrentWidget(self.ui.companyPage))
-
-    def setup_call_log_table(self):
-        table = self.ui.tableLog   # objectName из дизайнера
-        # Задаём 7 столбцов (ID, Дата/время, Кандидат, Результат, Длительность, Комментарий, Действия)
-        table.setColumnCount(7)
-        table.setHorizontalHeaderLabels([
-            "ID", "Дата/время", "Кандидат", "Результат",
-            "Длительность (мин)", "Комментарий", "Действия"
-        ])
-        table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
-        # Устанавливаем режим растяжения для всех столбцов
-        header = table.horizontalHeader()
-        header.setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
-        # Запрещаем редактирование
-        table.setEditTriggers(QTableWidget.NoEditTriggers) # type: ignore
-        # Затем для столбца 0 (ID) устанавливаем фиксированный режим и задаём ширину
-        header.setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
-        table.setColumnWidth(0, 20)  # ширина в пикселях 
-
-        # Заполняем тестовыми данными
-        self.populate_call_log()
-
-    def populate_call_log(self):
-        table = self.ui.tableLog
-        
-        test_data = [
-            (1, "2026-07-18 10:30", "Иванов Иван", "Заинтересован", "5", "Обсудили условия", ""),
-            (2, "2026-07-18 11:15", "Петрова Мария", "Не дозвонился", "0", "Автоответчик", ""),
-            (3, "2026-07-17 16:20", "Сидоров Алексей", "Приглашён на собеседование", "12", "Назначена встреча на пятницу", ""),
-            (4, "2026-07-17 09:45", "Козлова Анна", "Отказ", "3", "Не подходит график", ""),
-            (5, "2026-07-16 14:00", "Николаев Дмитрий", "Нанят", "8", "Принят на позицию", "")
-        ]
-        table.setRowCount(len(test_data))
-        for row, data in enumerate(test_data):
-            for col, value in enumerate(data):
-                item = QTableWidgetItem(str(value))
-                table.setItem(row, col, item)
 
 
     def setup_statistics_table(self):
@@ -125,42 +110,42 @@ class PanelWindow(QMainWindow):
             table.setItem(row, 0, QTableWidgetItem(label))
             table.setItem(row, 1, QTableWidgetItem(value))
 
-    def setup_candidates_table(self):
-        table = self.ui.tableCandidates   # objectName из дизайнера
-        table.setColumnCount(8)
-        table.setHorizontalHeaderLabels([
-            "ID", "ФИО", "Телефон", "Email", 
-            "Статус", "Источник", "Комментарий", "Резюме"
-        ])
-        # Запрещаем редактирование (опционально, если нужно)
-        table.setEditTriggers(QTableWidget.NoEditTriggers) # type: ignore
+    # def setup_candidates_table(self):
+    #     table = self.ui.tableCandidates   # objectName из дизайнера
+    #     table.setColumnCount(8)
+    #     table.setHorizontalHeaderLabels([
+    #         "ID", "ФИО", "Телефон", "Email", 
+    #         "Статус", "Источник", "Комментарий", "Резюме"
+    #     ])
+    #     # Запрещаем редактирование (опционально, если нужно)
+    #     table.setEditTriggers(QTableWidget.NoEditTriggers) # type: ignore
         
-        header = table.horizontalHeader()
-        # Столбец ID – узкий
-        header.setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
-        table.setColumnWidth(0, 50)
-        # Остальные столбцы – растягиваются равномерно
-        for col in range(1, 8):
-            header.setSectionResizeMode(col, QHeaderView.ResizeMode.Stretch)
+    #     header = table.horizontalHeader()
+    #     # Столбец ID – узкий
+    #     header.setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
+    #     table.setColumnWidth(0, 50)
+    #     # Остальные столбцы – растягиваются равномерно
+    #     for col in range(1, 8):
+    #         header.setSectionResizeMode(col, QHeaderView.ResizeMode.Stretch)
         
-        self.populate_candidates()
+    #     self.populate_candidates()
 
-    def populate_candidates(self):
-        table = self.ui.tableCandidates
-        test_data = [
-            (1, "Иванов Иван Иванович", "+7-999-111-22-33", "ivanov@mail.ru", 
-            "В работе", "HH.ru", "Обсуждали зарплату", "https://cloud.ru/resume1.pdf"),
-            (2, "Петрова Мария Сергеевна", "+7-999-222-33-44", "petrova@mail.ru", 
-            "Новый", "LinkedIn", "Ждёт ответа", ""),
-            (3, "Сидоров Алексей Петрович", "+7-999-333-44-55", "sidorov@mail.ru", 
-            "Собеседование", "Работа.ру", "Назначена встреча", "https://cloud.ru/resume3.pdf"),
-            (4, "Козлова Анна Дмитриевна", "+7-999-444-55-66", "kozlova@mail.ru", 
-            "Отказ", "Рекомендация", "Не подходит график", ""),
-            (5, "Николаев Дмитрий Викторович", "+7-999-555-66-77", "nikolaev@mail.ru", 
-            "Нанят", "HH.ru", "Принят на позицию разработчика", "https://cloud.ru/resume5.pdf"),
-        ]
-        table.setRowCount(len(test_data))
-        for row, data in enumerate(test_data):
-            for col, value in enumerate(data):
-                item = QTableWidgetItem(str(value))
-                table.setItem(row, col, item)
+    # def populate_candidates(self):
+    #     table = self.ui.tableCandidates
+    #     test_data = [
+    #         (1, "Иванов Иван Иванович", "+7-999-111-22-33", "ivanov@mail.ru", 
+    #         "В работе", "HH.ru", "Обсуждали зарплату", "https://cloud.ru/resume1.pdf"),
+    #         (2, "Петрова Мария Сергеевна", "+7-999-222-33-44", "petrova@mail.ru", 
+    #         "Новый", "LinkedIn", "Ждёт ответа", ""),
+    #         (3, "Сидоров Алексей Петрович", "+7-999-333-44-55", "sidorov@mail.ru", 
+    #         "Собеседование", "Работа.ру", "Назначена встреча", "https://cloud.ru/resume3.pdf"),
+    #         (4, "Козлова Анна Дмитриевна", "+7-999-444-55-66", "kozlova@mail.ru", 
+    #         "Отказ", "Рекомендация", "Не подходит график", ""),
+    #         (5, "Николаев Дмитрий Викторович", "+7-999-555-66-77", "nikolaev@mail.ru", 
+    #         "Нанят", "HH.ru", "Принят на позицию разработчика", "https://cloud.ru/resume5.pdf"),
+    #     ]
+    #     table.setRowCount(len(test_data))
+    #     for row, data in enumerate(test_data):
+    #         for col, value in enumerate(data):
+    #             item = QTableWidgetItem(str(value))
+    #             table.setItem(row, col, item)

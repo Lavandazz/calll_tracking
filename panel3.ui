@@ -292,7 +292,7 @@ background-color: rgba(120, 155, 155, 179)
             </sizepolicy>
            </property>
            <property name="currentIndex">
-            <number>4</number>
+            <number>5</number>
            </property>
            <widget class="QWidget" name="welcomePage">
             <layout class="QVBoxLayout" name="verticalLayout_20">
@@ -893,6 +893,70 @@ background-color: white
                 <widget class="QTableWidget" name="tableLog">
                  <property name="columnCount">
                   <number>0</number>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_11">
+               <item>
+                <widget class="QPushButton" name="addCall">
+                 <property name="styleSheet">
+                  <string notr="true">
+
+QPushButton {
+background:rgba(218, 255, 255, 230);
+color: black;
+border: 1px solid rgb(205, 239, 255);
+border-radius: 7px;
+}
+QPushButton:hover {
+background-color: white
+}</string>
+                 </property>
+                 <property name="text">
+                  <string>➕ Добавить</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="editCall">
+                 <property name="styleSheet">
+                  <string notr="true">
+
+QPushButton {
+background:rgba(218, 255, 255, 230);
+color: black;
+border: 1px solid rgb(205, 239, 255);
+border-radius: 7px;
+}
+QPushButton:hover {
+background-color: white
+}</string>
+                 </property>
+                 <property name="text">
+                  <string>✏️ Редактировать</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="deleteCall">
+                 <property name="styleSheet">
+                  <string notr="true">
+
+QPushButton {
+background:rgba(218, 255, 255, 230);
+color: black;
+border: 1px solid rgb(205, 239, 255);
+border-radius: 7px;
+}
+QPushButton:hover {
+background-color: white
+}</string>
+                 </property>
+                 <property name="text">
+                  <string>🗑️ Удалить</string>
                  </property>
                 </widget>
                </item>

@@ -1,117 +1,151 @@
 from PySide6.QtWidgets import (
     QDialog, QVBoxLayout, QHBoxLayout, QFormLayout,
-    QLineEdit, QPushButton, QMessageBox, QComboBox,
-    QDateTimeEdit
+    QLineEdit, QTextEdit, QComboBox, QPushButton,
+    QDateTimeEdit, QSpinBox, QMessageBox
 )
 from PySide6.QtCore import Qt, QDateTime
+from sqlalchemy.orm import sessionmaker
+from app.db.candidate_db import CandidateDB      # предположим, есть
+from app.db.vacancy_db import VacancyDB
+from app.db.user_db import UserDB               # предположим, есть
+from app.db.call_db import CallDB
+
 
 class CallEditDialog(QDialog):
-    def __init__(self, call_data=None, candidates=None, vacancies=None, users=None, parent=None):
+    def __init__(self, data=None, parent=None, session_maker: sessionmaker = None):
         super().__init__(parent)
-        self.setWindowTitle("Добавление звонка" if call_data is None else "Редактирование звонка")
+        self.session_maker = session_maker
+        self.data = data or {}
+        self.setWindowTitle("Редактирование звонка" if data else "Новый звонок")
         self.setModal(True)
-        self.setMinimumWidth(450)
-        self.setStyleSheet("""... (тот же стиль) ...""")
 
-        self.result_data = None
-
-        # Выпадающие списки для выбора кандидата, вакансии и пользователя
+        # Поля ввода
         self.candidate_combo = QComboBox()
-        if candidates:
-            for cand in candidates:
-                self.candidate_combo.addItem(cand.name_candidate, cand.id)
-
         self.vacancy_combo = QComboBox()
-        if vacancies:
-            for vac in vacancies:
-                self.vacancy_combo.addItem(vac.name_vacancy, vac.id)
-
         self.user_combo = QComboBox()
-        if users:
-            for usr in users:
-                self.user_combo.addItem(usr.username, usr.id)
-
+        self.status_edit = QLineEdit()
+        self.source_edit = QLineEdit()
+        self.comment_edit = QTextEdit()
+        self.duration_spin = QSpinBox()
+        self.duration_spin.setRange(0, 999)
+        self.duration_spin.setSuffix(" мин")
         self.date_edit = QDateTimeEdit()
         self.date_edit.setDateTime(QDateTime.currentDateTime())
         self.date_edit.setCalendarPopup(True)
+        self.link_resume_edit = QLineEdit()
 
-        self.status_combo = QComboBox()
-        self.status_combo.addItems(["Не дозвонился", "Отказ", "Заинтересован", "Приглашён на собеседование", "Нанят"])
+        # Заполняем выпадающие списки
+        self.load_candidates()
+        self.load_vacancies()
+        self.load_users()
 
-        self.source_edit = QLineEdit()
-        self.comment_edit = QLineEdit()
-        self.resume_edit = QLineEdit()
-        self.duration_edit = QLineEdit()
+        # Заполняем поля данными (если редактирование)
+        self.load_data()
 
-        if call_data:
-            # Заполнить поля, если есть данные
-            if call_data.get("id_candidate"):
-                idx = self.candidate_combo.findData(call_data["id_candidate"])
-                if idx >= 0:
-                    self.candidate_combo.setCurrentIndex(idx)
-            if call_data.get("id_vacancy"):
-                idx = self.vacancy_combo.findData(call_data["id_vacancy"])
-                if idx >= 0:
-                    self.vacancy_combo.setCurrentIndex(idx)
-            if call_data.get("id_user"):
-                idx = self.user_combo.findData(call_data["id_user"])
-                if idx >= 0:
-                    self.user_combo.setCurrentIndex(idx)
-            if call_data.get("date_call"):
-                self.date_edit.setDateTime(call_data["date_call"])
-            status = call_data.get("status", "")
-            idx = self.status_combo.findText(status)
-            if idx >= 0:
-                self.status_combo.setCurrentIndex(idx)
-            self.source_edit.setText(call_data.get("source", ""))
-            self.comment_edit.setText(call_data.get("comment", ""))
-            self.resume_edit.setText(call_data.get("link_resume", ""))
-            self.duration_edit.setText(str(call_data.get("duration_minutes", "")))
-
+        # Собираем форму
         layout = QVBoxLayout(self)
         form = QFormLayout()
-        form.setLabelAlignment(Qt.AlignRight)
         form.addRow("Кандидат:", self.candidate_combo)
         form.addRow("Вакансия:", self.vacancy_combo)
-        form.addRow("Менеджер:", self.user_combo)
-        form.addRow("Дата/время:", self.date_edit)
-        form.addRow("Результат:", self.status_combo)
+        form.addRow("Пользователь:", self.user_combo)
+        form.addRow("Статус:", self.status_edit)
         form.addRow("Источник:", self.source_edit)
+        form.addRow("Длительность (мин):", self.duration_spin)
+        form.addRow("Дата/время звонка:", self.date_edit)
         form.addRow("Комментарий:", self.comment_edit)
-        form.addRow("Ссылка на резюме:", self.resume_edit)
-        form.addRow("Длительность (мин):", self.duration_edit)
+        form.addRow("Ссылка на резюме:", self.link_resume_edit)
         layout.addLayout(form)
 
-        btn_layout = QHBoxLayout()
-        save_btn = QPushButton("Сохранить")
+        # Кнопки
+        btn_box = QHBoxLayout()
+        ok_btn = QPushButton("Сохранить")
         cancel_btn = QPushButton("Отмена")
-        save_btn.clicked.connect(self.accept)
+        ok_btn.clicked.connect(self.accept)
         cancel_btn.clicked.connect(self.reject)
-        btn_layout.addStretch()
-        btn_layout.addWidget(save_btn)
-        btn_layout.addWidget(cancel_btn)
-        layout.addLayout(btn_layout)
+        btn_box.addWidget(ok_btn)
+        btn_box.addWidget(cancel_btn)
+        layout.addLayout(btn_box)
 
-    def accept(self):
-        try:
-            duration = int(self.duration_edit.text()) if self.duration_edit.text().strip() else None
-        except ValueError:
-            QMessageBox.warning(self, "Ошибка", "Длительность должна быть числом")
+        self.setLayout(layout)
+
+    def load_candidates(self):
+        self.candidate_combo.clear()
+        self.candidate_combo.addItem("Не выбран", None)
+        if not self.session_maker:
             return
+        try:
+            with self.session_maker() as session:
+                cand_db = CandidateDB(session)
+                candidates = cand_db.get_all_candidates()  # предполагаем, что есть такой метод
+                for c in candidates:
+                    self.candidate_combo.addItem(c.name_candidate, c.id)
+        except Exception as e:
+            QMessageBox.critical(self, "Ошибка", f"Не удалось загрузить кандидатов:\n{str(e)}")
 
-        data = {
+    def load_vacancies(self):
+        self.vacancy_combo.clear()
+        self.vacancy_combo.addItem("Не выбрана", None)
+        if not self.session_maker:
+            return
+        try:
+            with self.session_maker() as session:
+                vac_db = VacancyDB(session)
+                vacancies = vac_db.get_all_vacancies()
+                for v in vacancies:
+                    self.vacancy_combo.addItem(v.name_vacancy, v.id)
+        except Exception as e:
+            QMessageBox.critical(self, "Ошибка", f"Не удалось загрузить вакансии:\n{str(e)}")
+
+    def load_users(self):
+        self.user_combo.clear()
+        self.user_combo.addItem("Не выбран", None)
+        if not self.session_maker:
+            return
+        try:
+            with self.session_maker() as session:
+                user_db = UserDB(session)
+                users = user_db.get_all_users()  # предполагаем, что есть
+                for u in users:
+                    self.user_combo.addItem(u.username, u.id)
+        except Exception as e:
+            QMessageBox.critical(self, "Ошибка", f"Не удалось загрузить пользователей:\n{str(e)}")
+
+    def load_data(self):
+        if not self.data:
+            return
+        # Устанавливаем значения из словаря
+        self.set_combo_by_id(self.candidate_combo, self.data.get("id_candidate"))
+        self.set_combo_by_id(self.vacancy_combo, self.data.get("id_vacancy"))
+        self.set_combo_by_id(self.user_combo, self.data.get("id_user"))
+        self.status_edit.setText(self.data.get("status", ""))
+        self.source_edit.setText(self.data.get("source", ""))
+        self.comment_edit.setPlainText(self.data.get("comment", ""))
+        self.duration_spin.setValue(self.data.get("duration_minutes", 0))
+        self.link_resume_edit.setText(self.data.get("link_resume", ""))
+        if "date_call" in self.data and self.data["date_call"]:
+            dt = self.data["date_call"]
+            if isinstance(dt, str):
+                dt = QDateTime.fromString(dt, "yyyy-MM-dd HH:mm:ss")
+            elif hasattr(dt, 'to_pydatetime'):  # если это datetime-объект
+                dt = QDateTime.fromPython(dt)
+            self.date_edit.setDateTime(dt)
+
+    def set_combo_by_id(self, combo, id_val):
+        if id_val is not None:
+            idx = combo.findData(id_val)
+            if idx >= 0:
+                combo.setCurrentIndex(idx)
+
+    @property
+    def result_data(self):
+        return {
             "id_candidate": self.candidate_combo.currentData(),
             "id_vacancy": self.vacancy_combo.currentData(),
             "id_user": self.user_combo.currentData(),
-            "date_call": self.date_edit.dateTime().toPython(),
-            "status": self.status_combo.currentText(),
+            "status": self.status_edit.text().strip(),
             "source": self.source_edit.text().strip(),
-            "comment": self.comment_edit.text().strip(),
-            "link_resume": self.resume_edit.text().strip(),
-            "duration_minutes": duration,
+            "comment": self.comment_edit.toPlainText().strip(),
+            "duration_minutes": self.duration_spin.value(),
+            "date_call": self.date_edit.dateTime().toPython(),
+            "link_resume": self.link_resume_edit.text().strip(),
         }
-        if not data["id_candidate"] or not data["id_vacancy"] or not data["id_user"]:
-            QMessageBox.warning(self, "Ошибка", "Выберите кандидата, вакансию и менеджера")
-            return
-        self.result_data = data
-        super().accept()

@@ -595,6 +595,59 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_19.addLayout(self.horizontalLayout_18)
 
+        self.horizontalLayout_11 = QHBoxLayout()
+        self.horizontalLayout_11.setObjectName(u"horizontalLayout_11")
+        self.addCall = QPushButton(self.callLogPage)
+        self.addCall.setObjectName(u"addCall")
+        self.addCall.setStyleSheet(u"\n"
+"\n"
+"QPushButton {\n"
+"background:rgba(218, 255, 255, 230);\n"
+"color: black;\n"
+"border: 1px solid rgb(205, 239, 255);\n"
+"border-radius: 7px;\n"
+"}\n"
+"QPushButton:hover {\n"
+"background-color: white\n"
+"}")
+
+        self.horizontalLayout_11.addWidget(self.addCall)
+
+        self.editCall = QPushButton(self.callLogPage)
+        self.editCall.setObjectName(u"editCall")
+        self.editCall.setStyleSheet(u"\n"
+"\n"
+"QPushButton {\n"
+"background:rgba(218, 255, 255, 230);\n"
+"color: black;\n"
+"border: 1px solid rgb(205, 239, 255);\n"
+"border-radius: 7px;\n"
+"}\n"
+"QPushButton:hover {\n"
+"background-color: white\n"
+"}")
+
+        self.horizontalLayout_11.addWidget(self.editCall)
+
+        self.deleteCall = QPushButton(self.callLogPage)
+        self.deleteCall.setObjectName(u"deleteCall")
+        self.deleteCall.setStyleSheet(u"\n"
+"\n"
+"QPushButton {\n"
+"background:rgba(218, 255, 255, 230);\n"
+"color: black;\n"
+"border: 1px solid rgb(205, 239, 255);\n"
+"border-radius: 7px;\n"
+"}\n"
+"QPushButton:hover {\n"
+"background-color: white\n"
+"}")
+
+        self.horizontalLayout_11.addWidget(self.deleteCall)
+
+
+        self.verticalLayout_19.addLayout(self.horizontalLayout_11)
+
         self.stackedWidget.addWidget(self.callLogPage)
 
         self.verticalLayout_6.addWidget(self.stackedWidget)
@@ -609,14 +662,14 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.stackedWidget.setCurrentIndex(4)
+        self.stackedWidget.setCurrentIndex(5)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
     # setupUi
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
+        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"CRM Control Panel", None))
         self.CRMlabel.setText("")
         self.CPlabel.setText("")
         self.company.setText(QCoreApplication.translate("MainWindow", u"\u041a\u043e\u043c\u043f\u0430\u043d\u0438\u0438", None))
@@ -681,5 +734,8 @@ class Ui_MainWindow(object):
         self.addCandidate.setText(QCoreApplication.translate("MainWindow", u"\u2795 \u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c \u043a\u0430\u043d\u0434\u0438\u0434\u0430\u0442\u0430", None))
         self.editCandidate.setText(QCoreApplication.translate("MainWindow", u"\u270f\ufe0f \u0420\u0435\u0434\u0430\u043a\u0442\u0438\u0440\u043e\u0432\u0430\u0442\u044c", None))
         self.deleteCandidate.setText(QCoreApplication.translate("MainWindow", u"\U0001f5d1\U0000fe0f \U00000423\U00000434\U00000430\U0000043b\U00000438\U00000442\U0000044c", None))
+        self.addCall.setText(QCoreApplication.translate("MainWindow", u"\u2795 \u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c", None))
+        self.editCall.setText(QCoreApplication.translate("MainWindow", u"\u270f\ufe0f \u0420\u0435\u0434\u0430\u043a\u0442\u0438\u0440\u043e\u0432\u0430\u0442\u044c", None))
+        self.deleteCall.setText(QCoreApplication.translate("MainWindow", u"\U0001f5d1\U0000fe0f \U00000423\U00000434\U00000430\U0000043b\U00000438\U00000442\U0000044c", None))
     # retranslateUi
 
