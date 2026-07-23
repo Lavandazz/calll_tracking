@@ -1,4 +1,5 @@
 from PySide6.QtWidgets import QTableWidget, QTableWidgetItem, QHeaderView
+from app.core.context import AppContext
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime, timedelta
 from config.db.models import Call
@@ -9,6 +10,7 @@ class StatisticsService:
         self.table = table_widget
         self.parent = parent_widget
         self.session_maker = session_maker
+        self.context = AppContext()
 
         self.setup_table()
 
@@ -29,8 +31,12 @@ class StatisticsService:
         Загружает статистику за указанный период.
         Если даты не заданы – за всё время.
         """
+        user_id = self.context.current_user_id
         with self.session_maker() as session:
             query = session.query(Call)
+            # Фильтр по пользователю, если не админ
+            if not self.context.is_admin():
+                query = query.filter(Call.id_user == user_id)
             if start_date:
                 query = query.filter(Call.date_call >= start_date)
             if end_date:

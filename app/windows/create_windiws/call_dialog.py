@@ -3,12 +3,11 @@ from PySide6.QtWidgets import (
     QLineEdit, QTextEdit, QComboBox, QPushButton,
     QDateTimeEdit, QSpinBox, QMessageBox
 )
-from PySide6.QtCore import Qt, QDateTime
+from PySide6.QtCore import QDateTime
 from sqlalchemy.orm import sessionmaker
-from app.db.candidate_db import CandidateDB      # предположим, есть
+from app.db.candidate_db import CandidateDB     
 from app.db.vacancy_db import VacancyDB
-from app.db.user_db import UserDB               # предположим, есть
-from app.db.call_db import CallDB
+from app.core.context import AppContext
 
 
 class CallEditDialog(QDialog):
@@ -16,6 +15,7 @@ class CallEditDialog(QDialog):
         super().__init__(parent)
         self.session_maker = session_maker
         self.data = data or {}
+        self.context = AppContext() # получаем пользователя из контекста после логина
         self.setWindowTitle("Редактирование звонка" if data else "Новый звонок")
         self.setModal(True)
 
@@ -37,7 +37,7 @@ class CallEditDialog(QDialog):
         # Заполняем выпадающие списки
         self.load_candidates()
         self.load_vacancies()
-        self.load_users()
+        # self.load_users()
 
         # Заполняем поля данными (если редактирование)
         self.load_data()
@@ -47,7 +47,7 @@ class CallEditDialog(QDialog):
         form = QFormLayout()
         form.addRow("Кандидат:", self.candidate_combo)
         form.addRow("Вакансия:", self.vacancy_combo)
-        form.addRow("Пользователь:", self.user_combo)
+        # form.addRow("Пользователь:", self.user_combo)
         form.addRow("Статус:", self.status_edit)
         form.addRow("Источник:", self.source_edit)
         form.addRow("Длительность (мин):", self.duration_spin)
@@ -96,19 +96,19 @@ class CallEditDialog(QDialog):
         except Exception as e:
             QMessageBox.critical(self, "Ошибка", f"Не удалось загрузить вакансии:\n{str(e)}")
 
-    def load_users(self):
-        self.user_combo.clear()
-        self.user_combo.addItem("Не выбран", None)
-        if not self.session_maker:
-            return
-        try:
-            with self.session_maker() as session:
-                user_db = UserDB(session)
-                users = user_db.get_all_users()  # предполагаем, что есть
-                for u in users:
-                    self.user_combo.addItem(u.username, u.id)
-        except Exception as e:
-            QMessageBox.critical(self, "Ошибка", f"Не удалось загрузить пользователей:\n{str(e)}")
+    # def load_users(self):
+    #     self.user_combo.clear()
+    #     self.user_combo.addItem("Не выбран", None)
+    #     if not self.session_maker:
+    #         return
+    #     try:
+    #         with self.session_maker() as session:
+    #             user_db = UserDB(session)
+    #             users = user_db.get_all_users()  # предполагаем, что есть
+    #             for u in users:
+    #                 self.user_combo.addItem(u.username, u.id)
+    #     except Exception as e:
+    #         QMessageBox.critical(self, "Ошибка", f"Не удалось загрузить пользователей:\n{str(e)}")
 
     def load_data(self):
         if not self.data:
@@ -141,7 +141,7 @@ class CallEditDialog(QDialog):
         return {
             "id_candidate": self.candidate_combo.currentData(),
             "id_vacancy": self.vacancy_combo.currentData(),
-            "id_user": self.user_combo.currentData(),
+            "id_user": self.context.current_user_id,
             "status": self.status_edit.text().strip(),
             "source": self.source_edit.text().strip(),
             "comment": self.comment_edit.toPlainText().strip(),

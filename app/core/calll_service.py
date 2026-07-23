@@ -3,9 +3,7 @@ from app.windows.create_windiws.call_dialog import CallEditDialog
 from sqlalchemy.orm import sessionmaker
 
 from app.db.call_db import CallDB
-from app.db.candidate_db import CandidateDB
-from app.db.vacancy_db import VacancyDB
-from app.db.user_db import UserDB
+from app.core.context import AppContext
 
 
 class CallService:
@@ -13,18 +11,18 @@ class CallService:
         self.table = table_widget
         self.parent = parent_widget
         self.session_maker = session_maker
+        self.context = AppContext()
 
         self.setup_table()
 
     def setup_table(self):
         table = self.table
-        # Столбцы: ID, Дата/время, Кандидат, Результат (статус), Длительность, Комментарий, Действия
         table.setColumnCount(7)
         table.setHorizontalHeaderLabels([
             "ID", "Дата/время", "Кандидат", "Результат",
             "Длительность (мин)", "Комментарий", "Действия"
         ])
-        table.setEditTriggers(QTableWidget.NoEditTriggers)  # type: ignore
+        table.setEditTriggers(QTableWidget.NoEditTriggers)
         header = table.horizontalHeader()
         header.setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
         header.setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
@@ -32,24 +30,23 @@ class CallService:
 
         self.load_data()
 
-    def load_data(self, user_id=None):
-        """Загружает звонки из БД и заполняет таблицу.
-           Если user_id не указан, загружаются все звонки (для админа).
-           Можно передать текущего пользователя.
-        """
+    def load_data(self):
+        """Загружает звонки только текущего пользователя (или все для админа)"""
+        user_id = self.context.current_user_id
+        if user_id is None:
+            QMessageBox.warning(self.parent, "Ошибка", "Пользователь не авторизован")
+            return
+
         with self.session_maker() as session:
             call_db = CallDB(session)
-            if user_id is not None:
-                calls = call_db.get_calls_by_user(user_id)
-            else:
+            if self.context.is_admin():
                 calls = call_db.get_all_calls()
+            else:
+                calls = call_db.get_calls_by_user(user_id)
 
             data = []
             for call in calls:
-                # Получаем имя кандидата (если есть)
                 candidate_name = call.candidate.name_candidate if call.candidate else "—"
-                # Можно также показать вакансию или пользователя, но в таблице их нет.
-                # При желании можно добавить столбец "Вакансия" или "Пользователь"
                 data.append((
                     call.id,
                     call.date_call.strftime("%Y-%m-%d %H:%M") if call.date_call else "",
@@ -57,9 +54,8 @@ class CallService:
                     call.status or "",
                     str(call.duration_minutes) if call.duration_minutes is not None else "",
                     call.comment or "",
-                    ""  # Действия (пока пусто)
+                    ""
                 ))
-
         self._populate_table(data)
 
     def _populate_table(self, data):
@@ -71,20 +67,12 @@ class CallService:
                 table.setItem(row, col, item)
 
     def add_call(self):
-        """Открыть диалог добавления нового звонка"""
         dialog = CallEditDialog(parent=self.parent, session_maker=self.session_maker)
         if dialog.exec() == QDialog.Accepted:
             data = dialog.result_data
-            # Обязательные поля: id_user (можно задать текущего пользователя), id_candidate, id_vacancy,
-            # но они могут быть None. Если хотите сделать обязательными, проверьте.
-            # Для простоты сохраняем как есть.
             with self.session_maker() as session:
                 call_db = CallDB(session)
-                # Метод add_call требует все поля, кроме id и date_create (они генерируются)
-                # Но в data у нас все ключи соответствуют полям модели, кроме id.
-                # Создадим объект Call напрямую через словарь, чтобы не завязываться на сигнатуру метода add_call.
-                # Можно использовать универсальный метод create из репозитория, но у нас его нет.
-                # Самый простой способ: создать объект и добавить.
+                # В data уже есть id_user из контекста
                 new_call = call_db.add_call(
                     user_id=data.get("id_user"),
                     candidate_id=data.get("id_candidate"),
@@ -96,7 +84,7 @@ class CallService:
                     date_call=data.get("date_call"),
                     link_resume=data.get("link_resume")
                 )
-            self.load_data()  # обновить таблицу
+            self.load_data()
 
     def edit_call(self):
         table = self.table
@@ -106,6 +94,7 @@ class CallService:
             return
 
         call_id = int(table.item(selected_row, 0).text())
+        user_id = self.context.current_user_id
 
         with self.session_maker() as session:
             call_db = CallDB(session)
@@ -114,10 +103,14 @@ class CallService:
                 QMessageBox.warning(self.parent, "Ошибка", "Звонок не найден")
                 return
 
+            # Проверяем, принадлежит ли звонок текущему пользователю (или админ)
+            if not self.context.is_admin() and call.id_user != user_id:
+                QMessageBox.warning(self.parent, "Ошибка", "Вы не можете редактировать этот звонок")
+                return
+
             current_data = {
                 "id_candidate": call.id_candidate,
                 "id_vacancy": call.id_vacancy,
-                "id_user": call.id_user,
                 "status": call.status,
                 "source": call.source,
                 "comment": call.comment,
@@ -129,6 +122,10 @@ class CallService:
         dialog = CallEditDialog(current_data, parent=self.parent, session_maker=self.session_maker)
         if dialog.exec() == QDialog.Accepted:
             new_data = dialog.result_data
+            # Из результата удаляем id_user, чтобы случайно не перезаписать его,
+            # либо оставляем – но в любом случае мы хотим сохранить автора
+            # Правильнее – не передавать id_user для обновления
+            new_data.pop("id_user", None)
             with self.session_maker() as session:
                 call_db = CallDB(session)
                 call_db.update_call(call_id, new_data)
@@ -142,6 +139,17 @@ class CallService:
             return
 
         call_id = int(table.item(selected_row, 0).text())
+        user_id = self.context.current_user_id
+
+        with self.session_maker() as session:
+            call_db = CallDB(session)
+            call = call_db.get_call_by_id(call_id)
+            if not call:
+                QMessageBox.warning(self.parent, "Ошибка", "Звонок не найден")
+                return
+            if not self.context.is_admin() and call.id_user != user_id:
+                QMessageBox.warning(self.parent, "Ошибка", "Вы не можете удалить этот звонок")
+                return
 
         reply = QMessageBox.question(
             self.parent,
