@@ -15,10 +15,10 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QDateEdit, QHBoxLayout, QHeaderView,
-    QLabel, QLineEdit, QMainWindow, QPushButton,
-    QSizePolicy, QStackedWidget, QTableWidget, QTableWidgetItem,
-    QTextBrowser, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QHBoxLayout, QHeaderView, QLabel,
+    QLineEdit, QMainWindow, QPushButton, QSizePolicy,
+    QStackedWidget, QTableWidget, QTableWidgetItem, QTextBrowser,
+    QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -389,37 +389,15 @@ class Ui_MainWindow(object):
         self.statisticPage.setObjectName(u"statisticPage")
         self.verticalLayout_18 = QVBoxLayout(self.statisticPage)
         self.verticalLayout_18.setObjectName(u"verticalLayout_18")
-        self.label_6 = QLabel(self.statisticPage)
-        self.label_6.setObjectName(u"label_6")
-
-        self.verticalLayout_18.addWidget(self.label_6)
-
-        self.dateFrom = QDateEdit(self.statisticPage)
-        self.dateFrom.setObjectName(u"dateFrom")
-        self.dateFrom.setCalendarPopup(True)
-
-        self.verticalLayout_18.addWidget(self.dateFrom)
-
-        self.label_7 = QLabel(self.statisticPage)
-        self.label_7.setObjectName(u"label_7")
-
-        self.verticalLayout_18.addWidget(self.label_7)
-
-        self.dateFor = QDateEdit(self.statisticPage)
-        self.dateFor.setObjectName(u"dateFor")
-        self.dateFor.setCalendarPopup(True)
-
-        self.verticalLayout_18.addWidget(self.dateFor)
-
         self.horizontalLayout_17 = QHBoxLayout()
         self.horizontalLayout_17.setObjectName(u"horizontalLayout_17")
-        self.btnApplyFilter_12 = QPushButton(self.statisticPage)
-        self.btnApplyFilter_12.setObjectName(u"btnApplyFilter_12")
-        sizePolicy.setHeightForWidth(self.btnApplyFilter_12.sizePolicy().hasHeightForWidth())
-        self.btnApplyFilter_12.setSizePolicy(sizePolicy)
-        self.btnApplyFilter_12.setMinimumSize(QSize(100, 30))
-        self.btnApplyFilter_12.setMaximumSize(QSize(100, 30))
-        self.btnApplyFilter_12.setStyleSheet(u"\n"
+        self.btnDay = QPushButton(self.statisticPage)
+        self.btnDay.setObjectName(u"btnDay")
+        sizePolicy.setHeightForWidth(self.btnDay.sizePolicy().hasHeightForWidth())
+        self.btnDay.setSizePolicy(sizePolicy)
+        self.btnDay.setMinimumSize(QSize(100, 30))
+        self.btnDay.setMaximumSize(QSize(100, 30))
+        self.btnDay.setStyleSheet(u"\n"
 "QPushButton {\n"
 "background:rgba(218, 255, 255, 230);\n"
 "color: black;\n"
@@ -430,15 +408,15 @@ class Ui_MainWindow(object):
 "background-color: white\n"
 "}")
 
-        self.horizontalLayout_17.addWidget(self.btnApplyFilter_12)
+        self.horizontalLayout_17.addWidget(self.btnDay)
 
-        self.btnResetFilter_12 = QPushButton(self.statisticPage)
-        self.btnResetFilter_12.setObjectName(u"btnResetFilter_12")
-        sizePolicy.setHeightForWidth(self.btnResetFilter_12.sizePolicy().hasHeightForWidth())
-        self.btnResetFilter_12.setSizePolicy(sizePolicy)
-        self.btnResetFilter_12.setMinimumSize(QSize(100, 30))
-        self.btnResetFilter_12.setMaximumSize(QSize(100, 30))
-        self.btnResetFilter_12.setStyleSheet(u"\n"
+        self.btnWeek = QPushButton(self.statisticPage)
+        self.btnWeek.setObjectName(u"btnWeek")
+        sizePolicy.setHeightForWidth(self.btnWeek.sizePolicy().hasHeightForWidth())
+        self.btnWeek.setSizePolicy(sizePolicy)
+        self.btnWeek.setMinimumSize(QSize(100, 30))
+        self.btnWeek.setMaximumSize(QSize(100, 30))
+        self.btnWeek.setStyleSheet(u"\n"
 "QPushButton {\n"
 "background:rgba(218, 255, 255, 230);\n"
 "color: black;\n"
@@ -449,7 +427,45 @@ class Ui_MainWindow(object):
 "background-color: white\n"
 "}")
 
-        self.horizontalLayout_17.addWidget(self.btnResetFilter_12)
+        self.horizontalLayout_17.addWidget(self.btnWeek)
+
+        self.btnMonth = QPushButton(self.statisticPage)
+        self.btnMonth.setObjectName(u"btnMonth")
+        sizePolicy.setHeightForWidth(self.btnMonth.sizePolicy().hasHeightForWidth())
+        self.btnMonth.setSizePolicy(sizePolicy)
+        self.btnMonth.setMinimumSize(QSize(100, 30))
+        self.btnMonth.setMaximumSize(QSize(100, 30))
+        self.btnMonth.setStyleSheet(u"\n"
+"QPushButton {\n"
+"background:rgba(218, 255, 255, 230);\n"
+"color: black;\n"
+"border: 1px solid rgb(205, 239, 255);\n"
+"border-radius: 7px;\n"
+"}\n"
+"QPushButton:hover {\n"
+"background-color: white\n"
+"}")
+
+        self.horizontalLayout_17.addWidget(self.btnMonth)
+
+        self.btnAll = QPushButton(self.statisticPage)
+        self.btnAll.setObjectName(u"btnAll")
+        sizePolicy.setHeightForWidth(self.btnAll.sizePolicy().hasHeightForWidth())
+        self.btnAll.setSizePolicy(sizePolicy)
+        self.btnAll.setMinimumSize(QSize(100, 30))
+        self.btnAll.setMaximumSize(QSize(100, 30))
+        self.btnAll.setStyleSheet(u"\n"
+"QPushButton {\n"
+"background:rgba(218, 255, 255, 230);\n"
+"color: black;\n"
+"border: 1px solid rgb(205, 239, 255);\n"
+"border-radius: 7px;\n"
+"}\n"
+"QPushButton:hover {\n"
+"background-color: white\n"
+"}")
+
+        self.horizontalLayout_17.addWidget(self.btnAll)
 
 
         self.verticalLayout_18.addLayout(self.horizontalLayout_17)
@@ -460,7 +476,7 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_18.addWidget(self.tableStatistics)
 
-        self.verticalLayout_18.setStretch(5, 1)
+        self.verticalLayout_18.setStretch(1, 1)
         self.stackedWidget.addWidget(self.statisticPage)
         self.candidatesPage = QWidget()
         self.candidatesPage.setObjectName(u"candidatesPage")
@@ -662,7 +678,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.stackedWidget.setCurrentIndex(5)
+        self.stackedWidget.setCurrentIndex(3)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -723,10 +739,10 @@ class Ui_MainWindow(object):
         self.addVacancy.setText(QCoreApplication.translate("MainWindow", u"\u2795 \u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c", None))
         self.editVacancy.setText(QCoreApplication.translate("MainWindow", u"\u270f\ufe0f \u0420\u0435\u0434\u0430\u043a\u0442\u0438\u0440\u043e\u0432\u0430\u0442\u044c", None))
         self.deleteVacancy.setText(QCoreApplication.translate("MainWindow", u"\U0001f5d1\U0000fe0f \U00000423\U00000434\U00000430\U0000043b\U00000438\U00000442\U0000044c", None))
-        self.label_6.setText(QCoreApplication.translate("MainWindow", u"\u0414\u0430\u0442\u0430 \u0441:", None))
-        self.label_7.setText(QCoreApplication.translate("MainWindow", u"\u041f\u043e:", None))
-        self.btnApplyFilter_12.setText(QCoreApplication.translate("MainWindow", u"\u041f\u0440\u0438\u043c\u0435\u043d\u0438\u0442\u044c", None))
-        self.btnResetFilter_12.setText(QCoreApplication.translate("MainWindow", u"\u041e\u0442\u043c\u0435\u043d\u0430", None))
+        self.btnDay.setText(QCoreApplication.translate("MainWindow", u"\u0414\u0435\u043d\u044c", None))
+        self.btnWeek.setText(QCoreApplication.translate("MainWindow", u"\u041d\u0435\u0434\u0435\u043b\u044f", None))
+        self.btnMonth.setText(QCoreApplication.translate("MainWindow", u"\u041c\u0435\u0441\u044f\u0446", None))
+        self.btnAll.setText(QCoreApplication.translate("MainWindow", u"\u0412\u0441\u0435 \u0432\u0440\u0435\u043c\u044f", None))
         self.candidateSearch_2.setText(QCoreApplication.translate("MainWindow", u"\u041f\u043e\u0438\u0441\u043a \u043a\u0430\u043d\u0434\u0438\u0434\u0430\u0442\u0430:", None))
         self.candidateEdit.setPlaceholderText(QCoreApplication.translate("MainWindow", u"\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u0424\u0418\u041e", None))
         self.btnApplyFilter_9.setText(QCoreApplication.translate("MainWindow", u"\u041f\u0440\u0438\u043c\u0435\u043d\u0438\u0442\u044c", None))

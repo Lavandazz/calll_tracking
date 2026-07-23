@@ -292,7 +292,7 @@ background-color: rgba(120, 155, 155, 179)
             </sizepolicy>
            </property>
            <property name="currentIndex">
-            <number>5</number>
+            <number>3</number>
            </property>
            <widget class="QWidget" name="welcomePage">
             <layout class="QVBoxLayout" name="verticalLayout_20">
@@ -602,39 +602,11 @@ background-color: white
             </layout>
            </widget>
            <widget class="QWidget" name="statisticPage">
-            <layout class="QVBoxLayout" name="verticalLayout_18" stretch="0,0,0,0,0,1">
-             <item>
-              <widget class="QLabel" name="label_6">
-               <property name="text">
-                <string>Дата с:</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QDateEdit" name="dateFrom">
-               <property name="calendarPopup">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="label_7">
-               <property name="text">
-                <string>По:</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QDateEdit" name="dateFor">
-               <property name="calendarPopup">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
+            <layout class="QVBoxLayout" name="verticalLayout_18" stretch="0,1">
              <item>
               <layout class="QHBoxLayout" name="horizontalLayout_17">
                <item>
-                <widget class="QPushButton" name="btnApplyFilter_12">
+                <widget class="QPushButton" name="btnDay">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
                    <horstretch>0</horstretch>
@@ -666,12 +638,12 @@ background-color: white
 }</string>
                  </property>
                  <property name="text">
-                  <string>Применить</string>
+                  <string>День</string>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="QPushButton" name="btnResetFilter_12">
+                <widget class="QPushButton" name="btnWeek">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
                    <horstretch>0</horstretch>
@@ -703,7 +675,81 @@ background-color: white
 }</string>
                  </property>
                  <property name="text">
-                  <string>Отмена</string>
+                  <string>Неделя</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="btnMonth">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>100</width>
+                   <height>30</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>100</width>
+                   <height>30</height>
+                  </size>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">
+QPushButton {
+background:rgba(218, 255, 255, 230);
+color: black;
+border: 1px solid rgb(205, 239, 255);
+border-radius: 7px;
+}
+QPushButton:hover {
+background-color: white
+}</string>
+                 </property>
+                 <property name="text">
+                  <string>Месяц</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="btnAll">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>100</width>
+                   <height>30</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>100</width>
+                   <height>30</height>
+                  </size>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">
+QPushButton {
+background:rgba(218, 255, 255, 230);
+color: black;
+border: 1px solid rgb(205, 239, 255);
+border-radius: 7px;
+}
+QPushButton:hover {
+background-color: white
+}</string>
+                 </property>
+                 <property name="text">
+                  <string>Все время</string>
                  </property>
                 </widget>
                </item>

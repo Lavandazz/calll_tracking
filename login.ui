@@ -11,7 +11,11 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>CallTrack</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>app/images/logo.png</normaloff>app/images/logo.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QLabel" name="label">
